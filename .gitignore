@@ -1,12 +1,14 @@
 node_modules
 .env
 .DS_Store
+.idea
 
 # Hardhat files
 cache
 artifacts
 coverage.json
 coverage
+zkit
 
 # Typechain generated files
 generated-types
