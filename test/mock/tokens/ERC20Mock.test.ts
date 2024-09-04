@@ -17,7 +17,7 @@ describe("ERC20Mock", () => {
     [OWNER, SECOND] = await ethers.getSigners();
 
     const ERC20Mock = await ethers.getContractFactory("ERC20Mock");
-    erc20 = await ERC20Mock.deploy("Mock", "Mock", 18);
+    erc20 = await ERC20Mock.deploy("Mock", "Mock", 18, OWNER.address);
 
     await reverter.snapshot();
   });
