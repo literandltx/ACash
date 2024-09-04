@@ -1,15 +1,22 @@
 import "@nomicfoundation/hardhat-ethers";
 import "@nomicfoundation/hardhat-chai-matchers";
-import "@solarity/hardhat-migrate";
-import "@solarity/hardhat-gobind";
+
+import "@solarity/hardhat-zkit";
 import "@solarity/hardhat-markup";
-import "@typechain/hardhat";
+import "@solarity/hardhat-migrate";
+
 import "hardhat-contract-sizer";
 import "hardhat-gas-reporter";
+
+import "@typechain/hardhat";
+
 import "solidity-coverage";
+
 import "tsconfig-paths/register";
 
 import { HardhatUserConfig } from "hardhat/config";
+
+import "@nomiclabs/hardhat-solhint";
 
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -32,38 +39,6 @@ const config: HardhatUserConfig = {
       accounts: privateKey(),
       gasMultiplier: 1.2,
     },
-    chapel: {
-      url: "https://data-seed-prebsc-1-s1.binance.org:8545",
-      accounts: privateKey(),
-      gasMultiplier: 1.2,
-      timeout: 60000,
-    },
-    fuji: {
-      url: `https://avalanche-fuji.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: privateKey(),
-      gasMultiplier: 1.2,
-    },
-    bsc: {
-      url: "https://bsc-dataseed.binance.org/",
-      accounts: privateKey(),
-      gasMultiplier: 1.2,
-    },
-    ethereum: {
-      url: `https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: privateKey(),
-      gasMultiplier: 1.2,
-    },
-    polygon: {
-      url: `https://matic-mainnet.chainstacklabs.com`,
-      accounts: privateKey(),
-      gasMultiplier: 1.2,
-    },
-    avalanche: {
-      url: `https://api.avax.network/ext/bc/C/rpc`,
-      accounts: privateKey(),
-      gasMultiplier: 1.2,
-      timeout: 60000,
-    },
   },
   solidity: {
     version: "0.8.20",
@@ -78,12 +53,6 @@ const config: HardhatUserConfig = {
   etherscan: {
     apiKey: {
       sepolia: `${process.env.ETHERSCAN_KEY}`,
-      mainnet: `${process.env.ETHERSCAN_KEY}`,
-      bscTestnet: `${process.env.BSCSCAN_KEY}`,
-      bsc: `${process.env.BSCSCAN_KEY}`,
-      polygon: `${process.env.POLYGONSCAN_KEY}`,
-      avalancheFujiTestnet: `${process.env.AVALANCHE_KEY}`,
-      avalanche: `${process.env.AVALANCHE_KEY}`,
     },
   },
   migrate: {
