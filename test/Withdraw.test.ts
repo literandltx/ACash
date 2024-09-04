@@ -1,17 +1,18 @@
-import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 import { ethers } from "hardhat";
 import { Depositor } from "@ethers-v6";
-import { MerkleTree } from "merkletreejs";
+import { BytesLike } from "ethers";
+import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 
 import { expect } from "chai";
 
-/*
-1. solhint improve
-3. git
- */
-
-import { getPoseidon, getCommitment, generateSecrets, Reverter, getBytes32PoseidonHash, getZKP } from "@test-helpers";
-import { BytesLike } from "ethers";
+import {
+  getPoseidon,
+  getCommitment,
+  generateSecrets,
+  Reverter,
+  getBytes32PoseidonHash,
+  getZKP
+} from "@test-helpers";
 
 describe("Withdraw", () => {
   const reverter = new Reverter();
@@ -62,7 +63,7 @@ describe("Withdraw", () => {
 
     await expect(
       depositor.deposit(commitment as any, { value: ethers.parseEther(eth_value) } as any),
-    ).to.be.revertedWith("Depositor: value must be 1 ether");
+    ).to.be.revertedWithCustomError(depositor, "InvalidDepositAmount").withArgs(eth_value, "1000000000000000000");
   });
 
   it("should not create one deposit twice", async () => {
@@ -73,7 +74,7 @@ describe("Withdraw", () => {
 
     await expect(
       depositor.deposit(commitment as any, { value: ethers.parseEther(eth_value) } as any),
-    ).to.be.revertedWith("Depositor: commitment already exists");
+    ).to.be.revertedWithCustomError(depositor, "CommitmentAlreadyExists").withArgs(commitment);
   });
 
   it("should withdraw deposit", async () => {
@@ -104,7 +105,7 @@ describe("Withdraw", () => {
     await depositor.withdraw(proof.nullifierHash, to, await depositor.getRoot(), proof.formattedProof);
     await expect(
       depositor.withdraw(proof.nullifierHash, to, await depositor.getRoot(), proof.formattedProof),
-    ).to.be.revertedWith("Depositor: nullifier already exists");
+    ).to.be.revertedWithCustomError(depositor, "NullifierAlreadyExists").withArgs(proof.nullifierHash);
   });
 
   it("should not withdrawal deposit with not existing root", async () => {
@@ -119,9 +120,8 @@ describe("Withdraw", () => {
     const proof = await getZKP(depositor, pair, to);
     const root: BytesLike = ethers.randomBytes(32);
 
-    await expect(depositor.withdraw(proof.nullifierHash, to, root, proof.formattedProof)).to.be.revertedWith(
-      "Depositor: root does not exist",
-    );
+    await expect(depositor.withdraw(proof.nullifierHash, to, root, proof.formattedProof)
+    ).to.be.revertedWithCustomError(depositor, "RootDoesNotExist").withArgs(root);
   });
 
   it("deposit load test", async () => {
@@ -148,6 +148,7 @@ describe("Withdraw", () => {
 
     await expect(
       depositor.withdraw(proof.nullifierHash, to, await depositor.getRoot(), proof.formattedProof),
-    ).to.be.revertedWith("Depositor: withdraw failed");
+    // ).to.be.revertedWith("Depositor: withdraw failed");
+    ).to.be.revertedWithCustomError(depositor, "WithdrawFailed");
   });
 });

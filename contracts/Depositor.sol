@@ -20,6 +20,12 @@ contract Depositor is PoseidonSMT {
     mapping(bytes32 => bool) public rootsHistory;
 
     error InvalidDepositAmount(uint256 actual, uint256 expected);
+    error CommitmentAlreadyExists(bytes32 commitment_);
+
+    error NullifierAlreadyExists(bytes32 nullifierHash_);
+    error RootDoesNotExist(bytes32 root_);
+    error InvalidWithdrawProof();
+    error WithdrawFailed();
 
     /**
      * @notice Depositor contract constructor
@@ -40,36 +46,44 @@ contract Depositor is PoseidonSMT {
             revert InvalidDepositAmount(msg.value, 1 ether);
         }
 
-        require(!commitments[commitment_], "Depositor: commitment already exists");
+        if (commitments[commitment_]) {
+            revert CommitmentAlreadyExists(commitment_);
+        }
 
         _add(commitment_);
         commitments[commitment_] = true;
         rootsHistory[getRoot()] = true;
     }
 
-    // man in the middle
     function withdraw(
         bytes32 nullifierHash_,
         address recipient_,
         bytes32 root_,
         VerifierHelper.ProofPoints calldata proof_
     ) public {
-        require(!nullifies[nullifierHash_], "Depositor: nullifier already exists");
-        require(rootsHistory[root_], "Depositor: root does not exist");
+        if (nullifies[nullifierHash_]) {
+            revert NullifierAlreadyExists(nullifierHash_);
+        }
 
-        require(
-            verifier.verifyProofSafe(
-                [uint256(root_), uint256(nullifierHash_), uint256(uint160(recipient_))]
-                    .asDynamic(),
-                proof_,
-                3
-            ),
-            "Depositor: Invalid withdraw proof"
-        );
+        if (!rootsHistory[root_]) {
+            revert RootDoesNotExist(root_);
+        }
+
+        if (
+            !verifier.verifyProofSafe(
+            [uint256(root_), uint256(nullifierHash_), uint256(uint160(recipient_))]
+            .asDynamic(),
+            proof_,
+            3
+        )) {
+            revert InvalidWithdrawProof();
+        }
 
         nullifies[nullifierHash_] = true;
 
         (bool success_, ) = payable(recipient_).call{value: 1 ether}("");
-        require(success_, "Depositor: withdraw failed");
+        if (!success_) {
+            revert WithdrawFailed();
+        }
     }
 }
