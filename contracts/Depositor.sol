@@ -86,4 +86,39 @@ contract Depositor is PoseidonSMT {
             revert WithdrawFailed();
         }
     }
+
+    function transfer(
+        bytes32 nullifierHash_,
+        bytes32 commitment_,
+        bytes32 root_,
+        VerifierHelper.ProofPoints calldata proof_
+    ) public {
+        if (nullifies[nullifierHash_]) {
+            revert NullifierAlreadyExists(nullifierHash_);
+        }
+
+        if (commitments[commitment_]) {
+            revert CommitmentAlreadyExists(commitment_);
+        }
+
+        if (!rootsHistory[root_]) {
+            revert RootDoesNotExist(root_);
+        }
+
+        if (
+            !verifier.verifyProofSafe(
+            [uint256(root_), uint256(nullifierHash_), uint256(commitment_)]
+            .asDynamic(),
+            proof_,
+            3
+        )) {
+            revert InvalidWithdrawProof();
+        }
+
+        nullifies[nullifierHash_] = true;
+
+        _add(commitment_);
+        commitments[commitment_] = true;
+        rootsHistory[getRoot()] = true;
+    }
 }
