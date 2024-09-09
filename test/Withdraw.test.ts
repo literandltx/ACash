@@ -11,7 +11,7 @@ import {
   generateSecrets,
   Reverter,
   getBytes32PoseidonHash,
-  getZKP
+  getZKP, CommitmentFields
 } from "@test-helpers";
 
 describe("Withdraw", () => {
@@ -148,7 +148,71 @@ describe("Withdraw", () => {
 
     await expect(
       depositor.withdraw(proof.nullifierHash, to, await depositor.getRoot(), proof.formattedProof),
-    // ).to.be.revertedWith("Depositor: withdraw failed");
     ).to.be.revertedWithCustomError(depositor, "WithdrawFailed");
   });
 });
+
+describe("Transfer", () => {
+  const reverter = new Reverter();
+
+  let OWNER: SignerWithAddress;
+  let USER1: SignerWithAddress;
+  let USER2: SignerWithAddress;
+
+  let depositor: Depositor;
+
+  let treeHeight = 6;
+
+  before(async () => {
+    [OWNER, USER1, USER2] = await ethers.getSigners();
+
+    const verifierFactory = await ethers.getContractFactory("WithdrawVerifier");
+    const verifier = await verifierFactory.deploy();
+
+    const Depositor = await ethers.getContractFactory("Depositor", {
+      libraries: {
+        PoseidonUnit1L: await (await getPoseidon(1)).getAddress(),
+        PoseidonUnit2L: await (await getPoseidon(2)).getAddress(),
+        PoseidonUnit3L: await (await getPoseidon(3)).getAddress(),
+      },
+    });
+    depositor = await Depositor.deploy(treeHeight, await verifier.getAddress());
+
+    await reverter.snapshot();
+  });
+
+  afterEach(reverter.revert);
+
+  it("should defend from front-running attack", async () => {
+    const eth_value = "1";
+
+    // A: create deposit
+    const pairA: CommitmentFields = generateSecrets();
+    const commitmentA = getCommitment(pairA);
+    await depositor.deposit(commitmentA as any, { value: ethers.parseEther(eth_value) } as any);
+
+    // B: prepare new commitment
+    const pairB: CommitmentFields = generateSecrets();
+    const commitmentB = getCommitment(pairB);
+
+    // A: ask B for new commitment
+    /* B: sending... */
+    /* A: receive commitmentB */
+
+    // A: prepare for transfer (generate proof)
+    const proof = await getZKP(depositor, pairA, commitmentB);
+    const root = await depositor.getRoot();
+
+    // M: try to use front-running attack
+    const pairC: CommitmentFields = generateSecrets();
+    const commitmentC = getCommitment(pairC);
+
+    await expect(
+      depositor.transfer(proof.nullifierHash, commitmentC, root, proof.formattedProof)
+    ).to.be.revertedWithCustomError(depositor, "InvalidWithdrawProof");
+    // M: attack failed if test passing
+
+    // A: transfer deposit
+    await depositor.transfer(proof.nullifierHash, commitmentB, root, proof.formattedProof);
+  })
+})
