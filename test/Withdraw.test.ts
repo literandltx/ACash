@@ -4,10 +4,19 @@ import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 
 import { expect } from "chai";
 
-import { CommitmentFields, generateSecrets, getCommitment, getPoseidon, getZKP, Reverter } from "@test-helpers";
+import {
+  CommitmentFields,
+  generateSecrets,
+  getBytes32PoseidonHash,
+  getCommitment,
+  getPoseidon,
+  getZKP,
+  Reverter
+} from "@test-helpers";
 import * as fs from "node:fs";
 
 const treeHeight = 32;
+const eth_value = "1"
 
 describe("Withdraw", () => {
   const reverter = new Reverter();
@@ -30,7 +39,7 @@ describe("Withdraw", () => {
         PoseidonUnit3L: await (await getPoseidon(3)).getAddress(),
       },
     });
-    depositor = await Depositor.deploy(treeHeight, await verifier.getAddress());
+    depositor = await Depositor.deploy(treeHeight, await verifier.getAddress(), ethers.parseEther(eth_value));
 
     await reverter.snapshot();
   });
@@ -39,7 +48,6 @@ describe("Withdraw", () => {
 
   it("should create deposit", async () => {
     const commitment = getCommitment(generateSecrets());
-    const eth_value = "1";
 
     await depositor.deposit(commitment as any, { value: ethers.parseEther(eth_value) } as any);
 
@@ -52,16 +60,15 @@ describe("Withdraw", () => {
 
   it("should not create zero value deposit", async () => {
     const commitment = getCommitment(generateSecrets());
-    const eth_value = "0";
+    const zero_eth_value = "0";
 
     await expect(
-      depositor.deposit(commitment as any, { value: ethers.parseEther(eth_value) } as any),
-    ).to.be.revertedWithCustomError(depositor, "InvalidDepositAmount").withArgs(eth_value, "1000000000000000000");
+      depositor.deposit(commitment as any, { value: ethers.parseEther(zero_eth_value) } as any),
+    ).to.be.revertedWithCustomError(depositor, "InvalidDepositAmount").withArgs(zero_eth_value, "1000000000000000000");
   });
 
   it("should not create one deposit twice", async () => {
     const commitment = getCommitment(generateSecrets());
-    const eth_value = "1";
 
     await depositor.deposit(commitment as any, { value: ethers.parseEther(eth_value) } as any);
 
@@ -73,7 +80,6 @@ describe("Withdraw", () => {
   it("should withdraw deposit", async () => {
     const pair = generateSecrets();
     const commitment = getCommitment(pair);
-    const eth_value = "1";
 
     await depositor.deposit(commitment as any, { value: ethers.parseEther(eth_value) } as any);
 
@@ -87,7 +93,6 @@ describe("Withdraw", () => {
   it("should not withdrawal deposit twice", async () => {
     const pair = generateSecrets();
     const commitment = getCommitment(pair);
-    const eth_value = "1";
 
     await depositor.deposit(commitment as any, { value: ethers.parseEther(eth_value) } as any);
 
@@ -104,7 +109,6 @@ describe("Withdraw", () => {
   it("should not withdrawal deposit with not existing root", async () => {
     const pair = generateSecrets();
     const commitment = getCommitment(pair);
-    const eth_value = "1";
 
     await depositor.deposit(commitment as any, { value: ethers.parseEther(eth_value) } as any);
 
@@ -120,7 +124,6 @@ describe("Withdraw", () => {
   it("deposit load test", async () => {
     for (let i = 0; i < 2; i++) {
       const commitment = getCommitment(generateSecrets());
-      const eth_value = "1";
 
       await depositor.deposit(commitment as any, { value: ethers.parseEther(eth_value) } as any);
     }
@@ -129,13 +132,10 @@ describe("Withdraw", () => {
   it.skip("should not execute if withdraw fail", async () => {
     const pair = generateSecrets();
     const commitment = getCommitment(pair);
-    const eth_value = "1";
 
     await depositor.deposit(commitment as any, { value: ethers.parseEther(eth_value) } as any);
 
-    // let to = await OWNER.getAddress(); // contract
-    let to = await OWNER.getAddress(); // contract
-    // front running attack
+    let to = await OWNER.getAddress();
 
     const proof = await getZKP(depositor, pair, to);
 
@@ -167,7 +167,7 @@ describe("Transfer", () => {
         PoseidonUnit3L: await (await getPoseidon(3)).getAddress(),
       },
     });
-    depositor = await Depositor.deploy(treeHeight, await verifier.getAddress());
+    depositor = await Depositor.deploy(treeHeight, await verifier.getAddress(), ethers.parseEther(eth_value));
 
     await reverter.snapshot();
   });
@@ -175,8 +175,6 @@ describe("Transfer", () => {
   afterEach(reverter.revert);
 
   it("should defend from front-running attack", async () => {
-    const eth_value = "1";
-
     // A: create deposit
     const pairA: CommitmentFields = generateSecrets();
     const commitmentA = getCommitment(pairA);
@@ -220,7 +218,6 @@ describe("Transfer", () => {
   }
 
   async function singleBunchTransfer(bunch: number): Promise<{ gasUsedSum: number; timeSpentSum: number }> {
-    const eth_value = "1";
     const gasUsed: number[] = [];
     const timeAmount: number[] = [];
 
@@ -321,7 +318,7 @@ describe("Transfer", () => {
     }
   }
 
-  it.only("transfer (bunch) metrics", async () => {
+  it.skip("transfer (batch) metrics", async () => {
     const bunch = 10;
     const count = 10;
     const result = await transferMetrics(bunch, count);
