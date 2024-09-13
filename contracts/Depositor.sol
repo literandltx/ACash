@@ -26,6 +26,7 @@ contract Depositor is PoseidonSMT {
     error RootDoesNotExist(bytes32 root_);
     error InvalidWithdrawProof();
     error WithdrawFailed();
+    error InputArraysNotEqual(uint256 nullifierHashes, uint256 commitment, uint256 proofs);
 
     /**
      * @notice Depositor contract constructor
@@ -120,5 +121,20 @@ contract Depositor is PoseidonSMT {
         _add(commitment_);
         commitments[commitment_] = true;
         rootsHistory[getRoot()] = true;
+    }
+
+    function simpleBatchPayment(
+        bytes32[] memory nullifierHash_,
+        bytes32[] memory commitment_,
+        bytes32 root_,
+        VerifierHelper.ProofPoints[] calldata proof_
+    ) public {
+        if (nullifierHash_.length != commitment_.length || commitment_.length != proof_.length) {
+            revert InputArraysNotEqual(nullifierHash_.length, commitment_.length, proof_.length);
+        }
+
+        for (uint i = 0; i < nullifierHash_.length; i++) {
+            transfer(nullifierHash_[i], commitment_[i], root_, proof_[i]);
+        }
     }
 }
