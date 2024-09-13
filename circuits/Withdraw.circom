@@ -70,4 +70,4 @@ template Withdraw(levels) {
     signal recipientSquare <== recipient * recipient;
 }
 
-component main {public [root, nullifierHash, recipient]} = Withdraw(6);
+component main {public [root, nullifierHash, recipient]} = Withdraw(32);
