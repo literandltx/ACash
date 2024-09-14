@@ -126,8 +126,8 @@ contract Depositor is PoseidonSMT {
     }
 
     function simpleBatchPayment(
-        bytes32[] memory nullifierHash_,
-        bytes32[] memory commitment_,
+        bytes32[] calldata nullifierHash_,
+        bytes32[] calldata commitment_,
         bytes32 root_,
         VerifierHelper.ProofPoints[] calldata proof_
     ) public {
