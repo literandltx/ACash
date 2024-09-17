@@ -13,6 +13,7 @@ contract Depositor is PoseidonSMT {
     using VerifierHelper for address;
 
     address public verifier;
+    uint256 public tier;
 
     mapping(bytes32 => bool) public commitments;
     mapping(bytes32 => bool) public nullifies;
@@ -36,15 +37,16 @@ contract Depositor is PoseidonSMT {
      *
      * Tree height used to generate verify contract MUST be the same as {treeHeight_}
      */
-    constructor(uint256 treeHeight_, address verifier_) {
+    constructor(uint256 treeHeight_, address verifier_, uint256 tier_) {
         __PoseidonSMT_init(treeHeight_);
 
         verifier = verifier_;
+        tier = tier_;
     }
 
     function deposit(bytes32 commitment_) public payable {
-        if (msg.value != 1 ether) {
-            revert InvalidDepositAmount(msg.value, 1 ether);
+        if (msg.value != tier) {
+            revert InvalidDepositAmount(msg.value, tier);
         }
 
         if (commitments[commitment_]) {
@@ -82,7 +84,7 @@ contract Depositor is PoseidonSMT {
 
         nullifies[nullifierHash_] = true;
 
-        (bool success_, ) = payable(recipient_).call{value: 1 ether}("");
+        (bool success_, ) = payable(recipient_).call{value: tier}("");
         if (!success_) {
             revert WithdrawFailed();
         }
@@ -124,8 +126,8 @@ contract Depositor is PoseidonSMT {
     }
 
     function simpleBatchPayment(
-        bytes32[] memory nullifierHash_,
-        bytes32[] memory commitment_,
+        bytes32[] calldata nullifierHash_,
+        bytes32[] calldata commitment_,
         bytes32 root_,
         VerifierHelper.ProofPoints[] calldata proof_
     ) public {
