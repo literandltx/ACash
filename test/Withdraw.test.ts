@@ -3,6 +3,7 @@ import { Depositor } from "@ethers-v6";
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 
 import { expect } from "chai";
+import * as fs from "node:fs";
 
 import {
   CommitmentFields,
@@ -13,7 +14,6 @@ import {
   getZKP,
   Reverter
 } from "@test-helpers";
-import * as fs from "node:fs";
 
 const treeHeight = 32;
 const eth_value = "1"
@@ -248,10 +248,13 @@ describe("Transfer", () => {
     const gasUsedSum = await sum(gasUsed);
     const timeSpentSum = await sum(timeAmount);
 
-    return {gasUsedSum, timeSpentSum};
+    return { gasUsedSum, timeSpentSum };
   }
 
-  function findMaxMinAndIndexes(arr: number[]): { max: { value: number, index: number }, min: { value: number, index: number } } {
+  function findMaxMinAndIndexes(arr: number[]): {
+    max: { value: number, index: number },
+    min: { value: number, index: number }
+  } {
     if (arr.length === 0) {
       throw new Error('Array cannot be empty');
     }
@@ -278,7 +281,10 @@ describe("Transfer", () => {
     };
   }
 
-  async function transferMetrics(bunch: number, counter: number): Promise<{gasExpectation: number[], timeExpectation: number[]}> {
+  async function transferMetrics(bunch: number, counter: number): Promise<{
+    gasExpectation: number[],
+    timeExpectation: number[]
+  }> {
     const gasExpectation: number[] = [];
     const timeExpectation: number[] = [];
 
@@ -294,7 +300,7 @@ describe("Transfer", () => {
       timeExpectation.push(expectation2);
     }
 
-    return {gasExpectation, timeExpectation}
+    return { gasExpectation, timeExpectation }
   }
 
   function saveResults(gasExpectation: number[], timeExpectation: number[], bunch: number, count: number): void {

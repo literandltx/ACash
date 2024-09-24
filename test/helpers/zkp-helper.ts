@@ -34,11 +34,11 @@ export function getNullifierHash(pair: CommitmentFields): string {
 }
 
 export async function getZKP(contract: Depositor, pair: CommitmentFields, _recipient: string) {
-  const leaf = getBytes32PoseidonHash(getCommitment(pair));
+  const leaf: string = getBytes32PoseidonHash(getCommitment(pair));
   const nullifierHash = getNullifierHash(pair);
   const circuit = await zkit.getCircuit("Withdraw");
 
-  const smtProof = await contract.getProof(leaf);
+  const smtProof = await contract.getProof(leaf as any);
 
   const inputs: PrivateWithdraw = {
     root: (await contract.getRoot()) as NumberLike,
