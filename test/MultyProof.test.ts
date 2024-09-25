@@ -96,10 +96,10 @@ describe.only("MultiProof", () => {
 
     const smtMultiProof = await getMultiProof(depositor, pairs);
 
-    expect(smtMultiProof.root).to.be.eq(await depositor.getRoot());
+    expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
     expect(smtMultiProof.proof.length).to.equal(0);
-    expect(smtMultiProof.proof).to.deep.be.eq([]);
-    expect(smtMultiProof.pairs).to.deep.be.eq(pairs);
+    expect(smtMultiProof.proof).to.deep.be.equal([]);
+    expect(smtMultiProof.pairs).to.deep.be.equal(pairs);
   });
 
   // not works
@@ -124,10 +124,10 @@ describe.only("MultiProof", () => {
 
     const smtMultiProof = await getMultiProof(depositor, pairs);
 
-    expect(smtMultiProof.root).to.be.eq(await depositor.getRoot());
+    expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
     expect(smtMultiProof.proof.length).to.equal(0);
-    expect(smtMultiProof.proof).to.deep.be.eq([]);
-    expect(smtMultiProof.pairs).to.deep.be.eq(pairs);
+    expect(smtMultiProof.proof).to.deep.be.equal([]);
+    expect(smtMultiProof.pairs).to.deep.be.equal(pairs);
   });
 
   describe("tree with 3 leaf, without empty nodes", async () => {
@@ -161,9 +161,9 @@ describe.only("MultiProof", () => {
       const smtMultiProof = await getMultiProof(depositor, pairToProof);
 
       expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
-      expect(smtMultiProof.root).to.be.eq(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.eq(2);
-      expect(smtMultiProof.proof).to.deep.be.eq([
+      expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
+      expect(smtMultiProof.proof.length).to.equal(2);
+      expect(smtMultiProof.proof).to.deep.be.equal([
         12748283128798949185497204024914921980675247531964740729871257389465893721813n,
         10401289719923273288719354902437864238973624066578753843061632312152429627977n
       ])
@@ -176,9 +176,9 @@ describe.only("MultiProof", () => {
       const smtMultiProof = await getMultiProof(depositor, pairToProof);
 
       expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
-      expect(smtMultiProof.root).to.be.eq(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.eq(2);
-      expect(smtMultiProof.proof).to.deep.be.eq([
+      expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
+      expect(smtMultiProof.proof.length).to.equal(2);
+      expect(smtMultiProof.proof).to.deep.be.equal([
         19795540555795918889281222843290998947573179790706433071253042629056343006344n,
         10401289719923273288719354902437864238973624066578753843061632312152429627977n
       ])
@@ -191,9 +191,9 @@ describe.only("MultiProof", () => {
       const smtMultiProof = await getMultiProof(depositor, pairToProof);
 
       expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
-      expect(smtMultiProof.root).to.be.eq(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.eq(1);
-      expect(smtMultiProof.proof).to.deep.be.eq([
+      expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
+      expect(smtMultiProof.proof.length).to.equal(1);
+      expect(smtMultiProof.proof).to.deep.be.equal([
         18786466683985473537218911826997259326705104878964995772945461149280543201286n
       ])
     });
@@ -205,9 +205,9 @@ describe.only("MultiProof", () => {
       const smtMultiProof = await getMultiProof(depositor, pairToProof);
 
       expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
-      expect(smtMultiProof.root).to.be.eq(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.eq(1);
-      expect(smtMultiProof.proof).to.deep.be.eq([
+      expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
+      expect(smtMultiProof.proof.length).to.equal(1);
+      expect(smtMultiProof.proof).to.deep.be.equal([
         10401289719923273288719354902437864238973624066578753843061632312152429627977n
       ])
     });
@@ -219,38 +219,23 @@ describe.only("MultiProof", () => {
       const smtMultiProof = await getMultiProof(depositor, pairToProof);
 
       expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
-      expect(smtMultiProof.root).to.be.eq(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.eq(1);
-      expect(smtMultiProof.proof).to.deep.be.eq([
+      expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
+      expect(smtMultiProof.proof.length).to.equal(1);
+      expect(smtMultiProof.proof).to.deep.be.equal([
         12748283128798949185497204024914921980675247531964740729871257389465893721813n,
       ])
     });
 
     it("should gen multiproof for 2 pairs [1, 2]", async () => {
-      const pairs: CommitmentFields[] =
-        [
-          {
-            secret: '0x00000000a32ddf42d18c8ced8c630a683601a4512192cffd4501cd3275b6513e',
-            nullifier: '0x000000009d12aa1a605621170c339f47927ef11119ba0c400d2ad2818b2dc96f'
-          },
-          {
-            secret: '0x0000000077db0ba60d2f1a003c60d380913309d772d944361d79d0e5f1a48aae',
-            nullifier: '0x0000000046a27e84778bf4feb2656c6bc9adbd4a91c3b9f36a902dccae53ebd9'
-          },
-          {
-            secret: '0x0000000060316572fa53ccc32746ec66c15ea1de40845867b177745458cc96df',
-            nullifier: '0x00000000ac1ae64802e1d9be299c06aaa74e051a07357ac8230ab6a376ea1b56'
-          }
-        ];
       const pairToProof: CommitmentFields[] = [pairs[1], pairs[2]]
       await Promise.all(pairs.map(pair => proceedCertainDeposit(pair)));
 
       const smtMultiProof = await getMultiProof(depositor, pairToProof);
 
       expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
-      expect(smtMultiProof.root).to.be.eq(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.eq(1);
-      expect(smtMultiProof.proof).to.deep.be.eq([
+      expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
+      expect(smtMultiProof.proof.length).to.equal(1);
+      expect(smtMultiProof.proof).to.deep.be.equal([
         19795540555795918889281222843290998947573179790706433071253042629056343006344n
       ])
     });
@@ -260,32 +245,38 @@ describe.only("MultiProof", () => {
 
       const smtMultiProof = await getMultiProof(depositor, pairs);
 
-      expect(smtMultiProof.root).to.be.eq(await depositor.getRoot());
+      expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
       expect(smtMultiProof.proof.length).to.equal(0);
-      expect(smtMultiProof.pairs).to.deep.be.eq(pairs);
+      expect(smtMultiProof.pairs).to.deep.be.equal(pairs);
     });
   })
 
   it("should test for gen test cases", async () => {
-    // const pairs =
-    //   [
-    //     {
-    //       secret: '0x00000000551e9caba346265ab896e145a3d3d6359dad756b2b998a5fe1e82b6b',
-    //       nullifier: '0x000000008660e62918c45569bfc87a180019d029f8257b662d8797f0a4b2e443'
-    //     },
-    //     {
-    //       secret: '0x000000001a51692da01c96034e670c471bffa3899e3b452ac6669abdc57dffe4',
-    //       nullifier: '0x00000000aa3eb6b01d78d2dc512621301a62ca845066703b3396e94d32659797'
-    //     }
-    //   ];
+    const pairs: CommitmentFields[] =
+      [
+        {
+          secret: '0x000000004ea5ae2fc9bfa24b0b4e3c43d2d11f18404b69efe35477c6f86ab899',
+          nullifier: '0x000000005be9fbfdddd4197dcfc7235e77aa1daf72008f9ac47997eded10e443'
+        },
+        {
+          secret: '0x00000000e03d579dbf882389e607163de243ba67e24eb5c4485679a972e8c3a5',
+          nullifier: '0x0000000081682627e20754f21b8449b665ba984728ce7af08b5a674ac24be959'
+        }
+      ];
     const numberToGen   = 2;
     const numberToProof = 2;
-    const pairs: CommitmentFields[] = Array.from({ length: numberToGen }, () => generateSecrets());
+    // const pairs: CommitmentFields[] = Array.from({ length: numberToGen }, () => generateSecrets());
+    console.log("Contract: ");
     await Promise.all(pairs.map(pair => proceedCertainDeposit(pair)));
-
+    console.log("\nTS: ");
     // console.log(pairs);
 
     const smtMultiProof = await getMultiProof(depositor, pickRandomElements(pairs, numberToProof));
+
+    console.log("\nResults: ");
+    console.log(BigInt(await depositor.getRoot()) + " root expected");
+    console.log(smtMultiProof.root + " root actual");
+    console.log(smtMultiProof.root === BigInt(await depositor.getRoot()));
   });
 
   async function getMultiProof(contract: Depositor, pairs: CommitmentFields[]): Promise<{ pairs: CommitmentFields[], proof: bigint[], root: bigint }> {
@@ -318,10 +309,17 @@ describe.only("MultiProof", () => {
     }
 
     // console.log();
-    // nodeInfos.forEach(node => {
-    //   console.log(node.siblings);
-    //   console.log(node.siblingIndex);
-    // })
+    // console.log("key");
+    nodeInfos.forEach(node => {
+      // console.log(node.currentNodeKey);
+      // console.log(node.siblings);
+      // console.log(node.siblings.map(num => BigInt(num)));
+      // console.log(node.siblingIndex);
+    })
+    console.log();
+
+    // console.log(BigInt(nodeInfos[0].siblings[0]));
+    // console.log(BigInt(nodeInfos[1].siblings[0]));
 
     while (nodeInfos[0].siblingIndex !== -1) {
       const maxIndex = Math.max(...nodeInfos.map(node => node.siblingIndex));
@@ -332,13 +330,15 @@ describe.only("MultiProof", () => {
         if (node.siblingIndex === maxIndex) {
           let pairNextNodeHash: bigint[];
 
-          if (isRight(node.currentNodeHash, node.siblingIndex + 1)) {
+          // console.log(node.currentNodeHash);
+
+          if (isRight(node.currentNodeHash, node.siblingIndex)) {
             pairNextNodeHash = [BigInt(node.siblings[node.siblingIndex]), node.currentNodeHash];
           } else {
             pairNextNodeHash = [node.currentNodeHash, BigInt(node.siblings[node.siblingIndex])];
           }
 
-          // pairNextNodeHash = swapIfZero(pairNextNodeHash) // ?
+          // console.log(pairNextNodeHash);
 
           const elementExists = B.some(existingElement => existingElement[0] === pairNextNodeHash[0] && existingElement[1] === pairNextNodeHash[1]);
 
@@ -360,10 +360,6 @@ describe.only("MultiProof", () => {
       nodeInfos = nodeInfos.filter(node => !node.toRemove);
     }
 
-    // console.log();
-    // console.log(nodeInfos[0].currentNodeHash + " root");
-    // console.log(M);
-
     return {
       pairs: pairs,
       proof: M,
@@ -372,7 +368,7 @@ describe.only("MultiProof", () => {
   }
 
   function isRight(value: BigInt, currentDepth: number): boolean {
-    return !(((value >> BigInt(currentDepth)) & BigInt(1)) === BigInt(1));
+    return (((value >> BigInt(currentDepth)) & BigInt(1)) === BigInt(1));
   }
 
   function findDeepestNonZeroPosition(array: string[]): number {
