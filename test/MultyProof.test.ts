@@ -491,7 +491,6 @@ describe.only("MultiProof", () => {
     });
   })
 
-  // todo
   describe("Tree with large random input", () => {
     Array.from({ length: 1 }, () => {
       it.skip("should gen proof for 5 random leaf from 50", async () => {
@@ -509,15 +508,19 @@ describe.only("MultiProof", () => {
       });
     });
 
-    Array.from({ length: 5 }, () => {
-      it.skip("should gen proof for 5 random leaf from 125", async () => {
-
-      });
-    });
-
     Array.from({ length: 2 }, () => {
       it.skip("should gen proof for 5 random leaf from 300", async () => {
+        const pairNumberToGen = 300;
+        const pairNumberToProof = 5;
+        const pairs: CommitmentFields[] = Array.from({ length: pairNumberToGen }, () => generateSecrets());
 
+        await Promise.all(pairs.map(pair => proceedCertainDeposit(pair)));
+        const chosenPairs = pickRandomElements(pairs, pairNumberToProof);
+
+        const smtMultiProof = await getMultiProof(depositor, chosenPairs);
+
+        expect(smtMultiProof.pairs).to.deep.be.equal(chosenPairs);
+        expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
       });
     });
 
@@ -531,29 +534,17 @@ describe.only("MultiProof", () => {
         const smtMultiProof = await getMultiProof(depositor, pickRandomElements(pairs, pairNumberToProof));
 
         expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
-        expect(smtMultiProof.proof.length).to.equal(0);
-        expect(smtMultiProof.proof).to.deep.be.equal([]);
         expect(smtMultiProof.pairs).to.deep.be.equal(pairs);
       });
     });
   })
 
-  it.only("should test for gen test cases", async () => {
-    const pairs: CommitmentFields[] = [
-      {
-        secret: '0x00000000f1ce6c627c1dd83599842a08899acb929480d39be8d98b1f10f1c20f',
-        nullifier: '0x00000000bf4ce6f519179b3835a9b81e662c696e46fa376a7dba6544ab6eb8f1'
-      },
-      {
-        secret: '0x000000007cbc88e3ad8ded8749a70eac76735f42b3d16662bde0d15c6c09cf5b',
-        nullifier: '0x0000000011ff27260e1d055a97ae3b69a5dc717fef1718590055d5a75711d697'
-      },
-      {
-        secret: '0x00000000ed1b4bbd5565a99005e07e6f26444fefe26a4e0375bb552a22df2c1f',
-        nullifier: '0x00000000eab2105c1da1be89554f8aff0ae9093de565b67c799129f8768b089a'
-      }
-    ];
-    // const pairs: CommitmentFields[] = Array.from({ length: 3 }, () => generateSecrets());
+  it("should test for gen test cases", async () => {
+    // const pairs: CommitmentFields[] = [
+    //
+    // ];
+
+    const pairs: CommitmentFields[] = Array.from({ length: 4 }, () => generateSecrets());
     console.log("Contract: ");
     await Promise.all(pairs.map(pair => proceedCertainDeposit(pair)));
     console.log("\nTS: ");
@@ -583,7 +574,7 @@ describe.only("MultiProof", () => {
       toRemove: boolean
     };
     let nodeInfos: NodeInfo[] = [];
-    const M: bigint[] = [];
+    const M: Set<bigint> = new Set<bigint>();
 
     const middleHash = (left: bigint, right: bigint) => Poseidon.hash([left, right]);
     const leafHash = (left: bigint, right: bigint) => Poseidon.hash([left, right, 1n]);
@@ -603,15 +594,19 @@ describe.only("MultiProof", () => {
       });
     }
 
-    nodeInfos.forEach(node => {
-      console.log(node.siblings);
-    })
+    // console.log("Siblings:");
+    // nodeInfos.forEach(node => {
+    //   console.log(node.siblings.map(item => BigInt(item)));
+    // })
 
+    // console.log("To iterate: ");
     while (nodeInfos[0].siblingIndex !== -1) {
       const maxIndex = Math.max(...nodeInfos.map(node => node.siblingIndex));
       const B: bigint[][] = [];
       const A: bigint[] = [];
 
+      // console.log(`Iteration: ${nodeInfos.find(node => node.siblingIndex === maxIndex)?.siblingIndex}`);
+      // console.log(`Nodes len: ${nodeInfos.length}`);
       nodeInfos.forEach(node => {
         if (node.siblingIndex === maxIndex) {
           let pairNextNodeHash: bigint[];
@@ -622,7 +617,7 @@ describe.only("MultiProof", () => {
             pairNextNodeHash = [node.currentNodeHash, BigInt(node.siblings[node.siblingIndex])];
           }
 
-          console.log(pairNextNodeHash);
+          // console.log(pairNextNodeHash);
 
           const elementExists = B.some(existingElement => existingElement[0] === pairNextNodeHash[0] && existingElement[1] === pairNextNodeHash[1]);
 
@@ -640,13 +635,16 @@ describe.only("MultiProof", () => {
         }
       });
 
-      M.push(...Array.from(new Set([...new Set(B.flat())].filter(item => !Array.from(A).includes(BigInt(item))))));
+      [...new Set(B.flat())]
+        .filter(item => !Array.from(A).includes(BigInt(item)))
+        .forEach(item => M.add(item));
+
       nodeInfos = nodeInfos.filter(node => !node.toRemove);
     }
 
     return {
       pairs: pairs,
-      proof: M,
+      proof: [...M],
       root: nodeInfos[0].currentNodeHash
     }
   }
