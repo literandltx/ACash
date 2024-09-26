@@ -316,8 +316,7 @@ describe.only("MultiProof", () => {
     })
   })
 
-  // todo
-  describe("Tree with 2 leaf node node and 1 zero node at level 0", () => {
+  describe("Tree with 2 leaf node and 1 zero node at level 0", () => {
     /**
      * root
      * ├── 0
@@ -336,6 +335,64 @@ describe.only("MultiProof", () => {
           nullifier: '0x00000000aa3eb6b01d78d2dc512621301a62ca845066703b3396e94d32659797'
         }
       ];
+
+    it("should gen multiproof for 1 pair [0]", async () => {
+      const pairToProof: CommitmentFields[] = [pairs[0]];
+      await Promise.all(pairs.map(pair => proceedCertainDeposit(pair)));
+
+      const smtMultiProof = await getMultiProof(depositor, pairToProof);
+
+      expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
+      expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
+      expect(smtMultiProof.proof.length).to.equal(2);
+      expect(smtMultiProof.proof).to.deep.be.equal([
+        11698066978440879307731542498806639515314676391710952633176759786942704433234n,
+        0n
+      ]);
+    });
+
+    it("should gen multiproof for 1 pair [1]", async () => {
+      const pairToProof: CommitmentFields[] = [pairs[1]];
+      await Promise.all(pairs.map(pair => proceedCertainDeposit(pair)));
+
+      const smtMultiProof = await getMultiProof(depositor, pairToProof);
+
+      expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
+      expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
+      expect(smtMultiProof.proof.length).to.equal(2);
+      expect(smtMultiProof.proof).to.deep.be.equal([
+        19220061746928465694122033967036362989603650648550216829320470455944585932118n,
+        0n
+      ]);
+    });
+
+    it("should gen multiproof for 1 pair [0, 1]", async () => {
+      const pairToProof: CommitmentFields[] = [pairs[0], pairs[1]];
+      await Promise.all(pairs.map(pair => proceedCertainDeposit(pair)));
+
+      const smtMultiProof = await getMultiProof(depositor, pairToProof);
+
+      expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
+      expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
+      expect(smtMultiProof.proof.length).to.equal(1);
+      expect(smtMultiProof.proof).to.deep.be.equal([
+        0n
+      ]);
+    });
+
+    it("should gen multiproof for 1 pair [1, 0]", async () => {
+      const pairToProof: CommitmentFields[] = [pairs[1], pairs[0]];
+      await Promise.all(pairs.map(pair => proceedCertainDeposit(pair)));
+
+      const smtMultiProof = await getMultiProof(depositor, pairToProof);
+
+      expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
+      expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
+      expect(smtMultiProof.proof.length).to.equal(1);
+      expect(smtMultiProof.proof).to.deep.be.equal([
+        0n
+      ]);
+    });
   })
 
   // todo
@@ -366,8 +423,8 @@ describe.only("MultiProof", () => {
   })
 
   // todo
-  describe.skip("Tree with large random input", () => {
-    Array.from({ length: 5 }, () => {
+  describe("Tree with large random input", () => {
+    Array.from({ length: 1 }, () => {
       it.skip("should gen proof for 5 random leaf from 50", async () => {
         const pairNumberToGen = 50;
         const pairNumberToProof = 5;
@@ -416,16 +473,12 @@ describe.only("MultiProof", () => {
     const pairs: CommitmentFields[] =
       [
         {
-          secret: '0x00000000f1ce6c627c1dd83599842a08899acb929480d39be8d98b1f10f1c20f',
-          nullifier: '0x00000000bf4ce6f519179b3835a9b81e662c696e46fa376a7dba6544ab6eb8f1'
+          secret: '0x00000000551e9caba346265ab896e145a3d3d6359dad756b2b998a5fe1e82b6b',
+          nullifier: '0x000000008660e62918c45569bfc87a180019d029f8257b662d8797f0a4b2e443'
         },
         {
-          secret: '0x000000007cbc88e3ad8ded8749a70eac76735f42b3d16662bde0d15c6c09cf5b',
-          nullifier: '0x0000000011ff27260e1d055a97ae3b69a5dc717fef1718590055d5a75711d697'
-        },
-        {
-          secret: '0x00000000ed1b4bbd5565a99005e07e6f26444fefe26a4e0375bb552a22df2c1f',
-          nullifier: '0x00000000eab2105c1da1be89554f8aff0ae9093de565b67c799129f8768b089a'
+          secret: '0x000000001a51692da01c96034e670c471bffa3899e3b452ac6669abdc57dffe4',
+          nullifier: '0x00000000aa3eb6b01d78d2dc512621301a62ca845066703b3396e94d32659797'
         }
       ];
     console.log("Contract: ");
@@ -433,11 +486,14 @@ describe.only("MultiProof", () => {
     console.log("\nTS: ");
 
     const smtMultiProof = await getMultiProof(depositor, [pairs[0], pairs[1]]);
+    // const smtMultiProof = await getMultiProof(depositor, [pairs[0]]);
 
     console.log("\nResults: ");
     console.log(BigInt(await depositor.getRoot()) + " root expected");
     console.log(smtMultiProof.root + " root actual");
     console.log(smtMultiProof.root === BigInt(await depositor.getRoot()));
+    console.log(smtMultiProof.proof.length + " proof len");
+    console.log(smtMultiProof.proof);
   });
 
   async function getMultiProof(contract: Depositor, pairs: CommitmentFields[]): Promise<{
