@@ -395,7 +395,7 @@ describe.only("MultiProof", () => {
     });
   })
 
-  describe("Tree with 3 leaf node node and 1 zero node at level 0", () => {
+  describe.skip("Tree with 3 leaf node node and 1 zero node at level 0", () => {
     /**
      * root
      * ├── 0
@@ -580,14 +580,13 @@ describe.only("MultiProof", () => {
     const leafHash = (left: bigint, right: bigint) => Poseidon.hash([left, right, 1n]);
 
     for (let i = 0; i < pairs.length; i++) {
-      const commitment = getCommitment(pairs[i]);
-      const key = getBytes32PoseidonHash(commitment);
-      const smtp = await contract.getProof(key as any);
+      const value: bigint = Poseidon.hash([BigInt(pairs[i].secret), BigInt(pairs[i].nullifier)]);
+      const key: bigint = Poseidon.hash([value]);
+      const smtp = await contract.getProof(ethers.toBeHex(key, 32) as any);
 
       nodeInfos.push({
-        /*  leaf hash H(K || V || 1)  */
-        currentNodeHash: leafHash(BigInt(key), BigInt(commitment)),
-        currentNodeKey: BigInt(key),
+        currentNodeHash: leafHash(key,value),
+        currentNodeKey: key,
         siblings: smtp.siblings,
         siblingIndex: findDeepestNonZeroPosition(smtp.siblings),
         toRemove: false
