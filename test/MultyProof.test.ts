@@ -68,8 +68,8 @@ describe.only("MultiProof", () => {
       const smtMultiProof = await getMultiProof(depositor, pairs);
 
       expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.equal(0);
-      expect(smtMultiProof.proof).to.deep.be.equal([]);
+      expect(smtMultiProof.siblings.length).to.equal(0);
+      expect(smtMultiProof.siblings).to.deep.be.equal([]);
       expect(smtMultiProof.pairs).to.deep.be.equal(pairs);
     });
 
@@ -95,8 +95,8 @@ describe.only("MultiProof", () => {
       const smtMultiProof = await getMultiProof(depositor, pairs);
 
       expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.equal(0);
-      expect(smtMultiProof.proof).to.deep.be.equal([]);
+      expect(smtMultiProof.siblings.length).to.equal(0);
+      expect(smtMultiProof.siblings).to.deep.be.equal([]);
       expect(smtMultiProof.pairs).to.deep.be.equal(pairs);
     });
 
@@ -122,8 +122,8 @@ describe.only("MultiProof", () => {
       const smtMultiProof = await getMultiProof(depositor, pairs);
 
       expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.equal(0);
-      expect(smtMultiProof.proof).to.deep.be.equal([]);
+      expect(smtMultiProof.siblings.length).to.equal(0);
+      expect(smtMultiProof.siblings).to.deep.be.equal([]);
       expect(smtMultiProof.pairs).to.deep.be.equal(pairs);
     });
 
@@ -149,8 +149,8 @@ describe.only("MultiProof", () => {
       const smtMultiProof = await getMultiProof(depositor, pairs);
 
       expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.equal(0);
-      expect(smtMultiProof.proof).to.deep.be.equal([]);
+      expect(smtMultiProof.siblings.length).to.equal(0);
+      expect(smtMultiProof.siblings).to.deep.be.equal([]);
       expect(smtMultiProof.pairs).to.deep.be.equal(pairs);
     });
 
@@ -176,8 +176,8 @@ describe.only("MultiProof", () => {
       const smtMultiProof = await getMultiProof(depositor, pairs);
 
       expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.equal(0);
-      expect(smtMultiProof.proof).to.deep.be.equal([]);
+      expect(smtMultiProof.siblings.length).to.equal(0);
+      expect(smtMultiProof.siblings).to.deep.be.equal([]);
       expect(smtMultiProof.pairs).to.deep.be.equal(pairs);
     });
   })
@@ -214,8 +214,8 @@ describe.only("MultiProof", () => {
 
       expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
       expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.equal(2);
-      expect(smtMultiProof.proof).to.deep.be.equal([
+      expect(smtMultiProof.siblings.length).to.equal(2);
+      expect(smtMultiProof.siblings).to.deep.be.equal([
         12748283128798949185497204024914921980675247531964740729871257389465893721813n,
         10401289719923273288719354902437864238973624066578753843061632312152429627977n
       ])
@@ -229,8 +229,8 @@ describe.only("MultiProof", () => {
 
       expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
       expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.equal(2);
-      expect(smtMultiProof.proof).to.deep.be.equal([
+      expect(smtMultiProof.siblings.length).to.equal(2);
+      expect(smtMultiProof.siblings).to.deep.be.equal([
         19795540555795918889281222843290998947573179790706433071253042629056343006344n,
         10401289719923273288719354902437864238973624066578753843061632312152429627977n
       ])
@@ -244,8 +244,8 @@ describe.only("MultiProof", () => {
 
       expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
       expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.equal(1);
-      expect(smtMultiProof.proof).to.deep.be.equal([
+      expect(smtMultiProof.siblings.length).to.equal(1);
+      expect(smtMultiProof.siblings).to.deep.be.equal([
         18786466683985473537218911826997259326705104878964995772945461149280543201286n
       ])
     });
@@ -258,8 +258,8 @@ describe.only("MultiProof", () => {
 
       expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
       expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.equal(1);
-      expect(smtMultiProof.proof).to.deep.be.equal([
+      expect(smtMultiProof.siblings.length).to.equal(1);
+      expect(smtMultiProof.siblings).to.deep.be.equal([
         10401289719923273288719354902437864238973624066578753843061632312152429627977n
       ])
     });
@@ -272,8 +272,8 @@ describe.only("MultiProof", () => {
 
       expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
       expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.equal(1);
-      expect(smtMultiProof.proof).to.deep.be.equal([
+      expect(smtMultiProof.siblings.length).to.equal(1);
+      expect(smtMultiProof.siblings).to.deep.be.equal([
         12748283128798949185497204024914921980675247531964740729871257389465893721813n,
       ])
     });
@@ -286,8 +286,8 @@ describe.only("MultiProof", () => {
 
       expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
       expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.equal(1);
-      expect(smtMultiProof.proof).to.deep.be.equal([
+      expect(smtMultiProof.siblings.length).to.equal(1);
+      expect(smtMultiProof.siblings).to.deep.be.equal([
         19795540555795918889281222843290998947573179790706433071253042629056343006344n
       ])
     });
@@ -298,7 +298,7 @@ describe.only("MultiProof", () => {
       const smtMultiProof = await getMultiProof(depositor, pairs);
 
       expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.equal(0);
+      expect(smtMultiProof.siblings.length).to.equal(0);
       expect(smtMultiProof.pairs).to.deep.be.equal(pairs);
     });
 
@@ -344,8 +344,8 @@ describe.only("MultiProof", () => {
 
       expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
       expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.equal(2);
-      expect(smtMultiProof.proof).to.deep.be.equal([
+      expect(smtMultiProof.siblings.length).to.equal(2);
+      expect(smtMultiProof.siblings).to.deep.be.equal([
         11698066978440879307731542498806639515314676391710952633176759786942704433234n,
         0n
       ]);
@@ -359,8 +359,8 @@ describe.only("MultiProof", () => {
 
       expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
       expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.equal(2);
-      expect(smtMultiProof.proof).to.deep.be.equal([
+      expect(smtMultiProof.siblings.length).to.equal(2);
+      expect(smtMultiProof.siblings).to.deep.be.equal([
         19220061746928465694122033967036362989603650648550216829320470455944585932118n,
         0n
       ]);
@@ -374,8 +374,8 @@ describe.only("MultiProof", () => {
 
       expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
       expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.equal(1);
-      expect(smtMultiProof.proof).to.deep.be.equal([
+      expect(smtMultiProof.siblings.length).to.equal(1);
+      expect(smtMultiProof.siblings).to.deep.be.equal([
         0n
       ]);
     });
@@ -388,8 +388,8 @@ describe.only("MultiProof", () => {
 
       expect(smtMultiProof.pairs).to.deep.equal(pairToProof);
       expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
-      expect(smtMultiProof.proof.length).to.equal(1);
-      expect(smtMultiProof.proof).to.deep.be.equal([
+      expect(smtMultiProof.siblings.length).to.equal(1);
+      expect(smtMultiProof.siblings).to.deep.be.equal([
         0n
       ]);
     });
@@ -571,8 +571,8 @@ describe.only("MultiProof", () => {
     console.log(actualRoot + " root expected");
     console.log(smtMultiProof.root + " root actual");
     console.log(smtMultiProof.root === actualRoot);
-    console.log(smtMultiProof.proof.length + " proof len");
-    console.log(smtMultiProof.proof);
+    console.log(smtMultiProof.siblings.length + " proof len");
+    console.log(smtMultiProof.siblings);
   });
 
   it.skip("should gen proof for 5 random leaf from 100", async () => {
@@ -591,7 +591,7 @@ describe.only("MultiProof", () => {
 
   async function getMultiProof(contract: Depositor, pairs: CommitmentFields[]): Promise<{
     pairs: CommitmentFields[],
-    proof: bigint[],
+    siblings: bigint[],
     root: bigint
   }> {
     type NodeInfo = {
@@ -599,7 +599,6 @@ describe.only("MultiProof", () => {
       currentNodeKey: bigint
       siblings: string[]
       siblingIndex: number
-      toRemove: boolean
     };
     let nodeInfos: NodeInfo[] = [];
     const M: Set<bigint> = new Set<bigint>();
@@ -616,8 +615,7 @@ describe.only("MultiProof", () => {
         currentNodeHash: leafHash(key, value),
         currentNodeKey: key,
         siblings: smtp.siblings,
-        siblingIndex: findDeepestNonZeroPosition(smtp.siblings),
-        toRemove: false
+        siblingIndex: findDeepestNonZeroPosition(smtp.siblings)
       });
     }
 
@@ -644,7 +642,6 @@ describe.only("MultiProof", () => {
         .filter(item => !Array.from(A).includes(BigInt(item)))
         .forEach(item => M.add(item));
 
-      nodeInfos = nodeInfos.filter(node => !node.toRemove);
       nodeInfos = distinctNodeInfos(nodeInfos);
 
       A.length = 0;
@@ -653,13 +650,13 @@ describe.only("MultiProof", () => {
 
     return {
       pairs: pairs,
-      proof: [...M],
+      siblings: [...M],
       root: nodeInfos[0].currentNodeHash
     }
   }
 
   function isRight(value: BigInt, currentDepth: number): boolean {
-    return (((value >> BigInt(currentDepth)) & BigInt(1)) === BigInt(1));
+    return ((value >> BigInt(currentDepth)) & BigInt(1)) === BigInt(1);
   }
 
   function findDeepestNonZeroPosition(array: string[]): number {
@@ -672,7 +669,7 @@ describe.only("MultiProof", () => {
     return 0;
   }
 
-  async function proceedCertainDeposit(pair: CommitmentFields) {
+  async function proceedCertainDeposit(pair: CommitmentFields): Promise<void> {
     await depositor.deposit(getCommitment(pair) as any, { value: ethers.parseEther(eth_value) } as any);
   }
 
