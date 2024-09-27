@@ -13,7 +13,7 @@ import { ethers } from "hardhat";
 import { Poseidon } from "@iden3/js-crypto";
 import { expect } from "chai";
 
-const treeHeight = 8; // 32 default
+const treeHeight = 32; // default
 const eth_value = "1"
 
 describe.only("MultiProof", () => {
@@ -395,7 +395,7 @@ describe.only("MultiProof", () => {
     });
   })
 
-  describe.skip("Tree with 3 leaf node node and 1 zero node at level 0", () => {
+  describe("Tree with 3 leaf node node and 1 zero node at level 0", () => {
     /**
      * root
      * ├── 0
@@ -492,8 +492,8 @@ describe.only("MultiProof", () => {
   })
 
   describe("Tree with large random input", () => {
-    Array.from({ length: 1 }, () => {
-      it.skip("should gen proof for 5 random leaf from 50", async () => {
+    Array.from({ length: 12 }, () => {
+      it("should gen proof for 5 random leaf from 50", async () => {
         const pairNumberToGen = 50;
         const pairNumberToProof = 5;
         const pairs: CommitmentFields[] = Array.from({ length: pairNumberToGen }, () => generateSecrets());
@@ -508,15 +508,14 @@ describe.only("MultiProof", () => {
       });
     });
 
-    Array.from({ length: 2 }, () => {
-      it.skip("should gen proof for 5 random leaf from 300", async () => {
-        const pairNumberToGen = 300;
-        const pairNumberToProof = 5;
-        const pairs: CommitmentFields[] = Array.from({ length: pairNumberToGen }, () => generateSecrets());
+    Array.from({ length: 1 }, async () => {
+      const pairNumberToGen = 400;
+      const pairNumberToProof = 5;
+      const pairs: CommitmentFields[] = Array.from({ length: pairNumberToGen }, () => generateSecrets());
+      await Promise.all(pairs.map(pair => proceedCertainDeposit(pair)));
 
-        await Promise.all(pairs.map(pair => proceedCertainDeposit(pair)));
+      it("should gen proof for 5 random leaf from 400", async () => {
         const chosenPairs = pickRandomElements(pairs, pairNumberToProof);
-
         const smtMultiProof = await getMultiProof(depositor, chosenPairs);
 
         expect(smtMultiProof.pairs).to.deep.be.equal(chosenPairs);
@@ -524,13 +523,13 @@ describe.only("MultiProof", () => {
       });
     });
 
-    Array.from({ length: 1 }, () => {
-      it.skip("should gen proof for 5 random leaf from 1200", async () => {
-        const pairNumberToGen = 1200;
-        const pairNumberToProof = 5;
-        const pairs: CommitmentFields[] = Array.from({ length: pairNumberToGen }, () => generateSecrets());
-        await Promise.all(pairs.map(pair => proceedCertainDeposit(pair)));
+    Array.from({ length: 1 }, async () => {
+      const pairNumberToGen = 1200;
+      const pairNumberToProof = 5;
+      const pairs: CommitmentFields[] = Array.from({ length: pairNumberToGen }, () => generateSecrets());
+      await Promise.all(pairs.map(pair => proceedCertainDeposit(pair)));
 
+      it.skip("should gen proof for 5 random leaf from 1200", async () => {
         const smtMultiProof = await getMultiProof(depositor, pickRandomElements(pairs, pairNumberToProof));
 
         expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
@@ -539,26 +538,55 @@ describe.only("MultiProof", () => {
     });
   })
 
-  it("should test for gen test cases", async () => {
-    // const pairs: CommitmentFields[] = [
-    //
-    // ];
+  it.skip("should test for gen test cases", async () => {
+    const pairs: CommitmentFields[] =
+      [
+        {
+          secret: '0x00000000a32ddf42d18c8ced8c630a683601a4512192cffd4501cd3275b6513e',
+          nullifier: '0x000000009d12aa1a605621170c339f47927ef11119ba0c400d2ad2818b2dc96f'
+        },
+        {
+          secret: '0x0000000077db0ba60d2f1a003c60d380913309d772d944361d79d0e5f1a48aae',
+          nullifier: '0x0000000046a27e84778bf4feb2656c6bc9adbd4a91c3b9f36a902dccae53ebd9'
+        },
+        {
+          secret: '0x0000000060316572fa53ccc32746ec66c15ea1de40845867b177745458cc96df',
+          nullifier: '0x00000000ac1ae64802e1d9be299c06aaa74e051a07357ac8230ab6a376ea1b56'
+        }
+      ];
 
-    const pairs: CommitmentFields[] = Array.from({ length: 4 }, () => generateSecrets());
-    console.log("Contract: ");
+    // const pairs: CommitmentFields[] = Array.from({ length: 7 }, () => generateSecrets());
     await Promise.all(pairs.map(pair => proceedCertainDeposit(pair)));
-    console.log("\nTS: ");
-    console.log(pairs);
+    // console.log(pairs);
 
+    // const smtMultiProof = await getMultiProof(depositor, [pairs[0]]);
     // const smtMultiProof = await getMultiProof(depositor, [pairs[1]]);
+    // const smtMultiProof = await getMultiProof(depositor, [pairs[2]]);
+    // const smtMultiProof = await getMultiProof(depositor, [pairs[0], pairs[1]]);
+    // const smtMultiProof = await getMultiProof(depositor, [pairs[1], pairs[2]]);
     const smtMultiProof = await getMultiProof(depositor, pairs);
 
+    const actualRoot = BigInt(await depositor.getRoot());
     console.log("\nResults: ");
-    console.log(BigInt(await depositor.getRoot()) + " root expected");
+    console.log(actualRoot + " root expected");
     console.log(smtMultiProof.root + " root actual");
-    console.log(smtMultiProof.root === BigInt(await depositor.getRoot()));
+    console.log(smtMultiProof.root === actualRoot);
     console.log(smtMultiProof.proof.length + " proof len");
     console.log(smtMultiProof.proof);
+  });
+
+  it.skip("should gen proof for 5 random leaf from 100", async () => {
+    const pairNumberToGen = 100;
+    const pairNumberToProof = 5;
+    const pairs: CommitmentFields[] = Array.from({ length: pairNumberToGen }, () => generateSecrets());
+
+    await Promise.all(pairs.map(pair => proceedCertainDeposit(pair)));
+    const chosenPairs = pickRandomElements(pairs, pairNumberToProof);
+
+    const smtMultiProof = await getMultiProof(depositor, chosenPairs);
+
+    expect(smtMultiProof.pairs).to.deep.be.equal(chosenPairs);
+    expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
   });
 
   async function getMultiProof(contract: Depositor, pairs: CommitmentFields[]): Promise<{
@@ -585,7 +613,7 @@ describe.only("MultiProof", () => {
       const smtp = await contract.getProof(ethers.toBeHex(key, 32) as any);
 
       nodeInfos.push({
-        currentNodeHash: leafHash(key,value),
+        currentNodeHash: leafHash(key, value),
         currentNodeKey: key,
         siblings: smtp.siblings,
         siblingIndex: findDeepestNonZeroPosition(smtp.siblings),
@@ -599,46 +627,39 @@ describe.only("MultiProof", () => {
     // })
 
     // console.log("To iterate: ");
-    while (nodeInfos[0].siblingIndex !== -1) {
+    while (nodeInfos.length !== 0 && nodeInfos[0].siblingIndex !== -1) {
       const maxIndex = Math.max(...nodeInfos.map(node => node.siblingIndex));
       const B: bigint[][] = [];
       const A: bigint[] = [];
 
-      // console.log(`Iteration: ${nodeInfos.find(node => node.siblingIndex === maxIndex)?.siblingIndex}`);
+      // console.log(`\nIteration: ${nodeInfos.find(node => node.siblingIndex === maxIndex)?.siblingIndex}`);
       // console.log(`Nodes len: ${nodeInfos.length}`);
-      nodeInfos.forEach(node => {
-        if (node.siblingIndex === maxIndex) {
-          let pairNextNodeHash: bigint[];
+      // console.log(`Filtered nodes len: ${nodeInfos.filter(node => node.siblingIndex === maxIndex).length}`);
+      nodeInfos
+        .filter(node => node.siblingIndex === maxIndex)
+        .forEach(node => {
+            const pairNextNodeHash: bigint[] = isRight(node.currentNodeKey, node.siblingIndex) ?
+              [BigInt(node.siblings[node.siblingIndex]), node.currentNodeHash] : [node.currentNodeHash, BigInt(node.siblings[node.siblingIndex])];
 
-          if (isRight(node.currentNodeKey, node.siblingIndex)) {
-            pairNextNodeHash = [BigInt(node.siblings[node.siblingIndex]), node.currentNodeHash];
-          } else {
-            pairNextNodeHash = [node.currentNodeHash, BigInt(node.siblings[node.siblingIndex])];
+            A.push(node.currentNodeHash);
+            B.push(pairNextNodeHash);
+
+            node.currentNodeHash = middleHash(pairNextNodeHash[0], pairNextNodeHash[1]);
+            node.siblingIndex--;
           }
-
-          // console.log(pairNextNodeHash);
-
-          const elementExists = B.some(existingElement => existingElement[0] === pairNextNodeHash[0] && existingElement[1] === pairNextNodeHash[1]);
-
-          A.push(node.currentNodeHash)
-          B.push(pairNextNodeHash);
-
-          if (!elementExists) {
-            const hash = middleHash(pairNextNodeHash[0], pairNextNodeHash[1]);
-            node.currentNodeHash = hash;
-            node.currentNodeKey = BigInt(getBytes32PoseidonHash(BigInt(hash).toString()));
-            node.siblingIndex = node.siblingIndex - 1;
-          } else {
-            node.toRemove = true;
-          }
-        }
-      });
+        );
 
       [...new Set(B.flat())]
         .filter(item => !Array.from(A).includes(BigInt(item)))
         .forEach(item => M.add(item));
 
       nodeInfos = nodeInfos.filter(node => !node.toRemove);
+      nodeInfos = distinctNodeInfos(nodeInfos);
+
+      // console.log(`B.len: ${B.length}`);
+
+      A.length = 0;
+      B.length = 0;
     }
 
     return {
@@ -666,14 +687,6 @@ describe.only("MultiProof", () => {
     await depositor.deposit(getCommitment(pair) as any, { value: ethers.parseEther(eth_value) } as any);
   }
 
-  async function mockRandomDeposit() {
-    await depositor.deposit(getCommitment(generateSecrets()) as any, { value: ethers.parseEther(eth_value) } as any);
-  }
-
-  async function runMockDeposits(n: number): Promise<void> {
-    await Promise.all(Array.from({ length: n }, () => mockRandomDeposit()));
-  }
-
   function pickRandomElements<T>(arr: T[], count: number): T[] {
     if (count > arr.length) {
       throw new Error("Count exceeds the number of available elements.");
@@ -683,4 +696,15 @@ describe.only("MultiProof", () => {
     return shuffled.slice(0, count);
   }
 
+  function distinctNodeInfos<T extends { currentNodeHash: bigint }>(nodeInfos: T[]): T[] {
+    const uniqueMap: Map<bigint, T> = new Map();
+
+    for (const nodeInfo of nodeInfos) {
+      if (!uniqueMap.has(nodeInfo.currentNodeHash)) {
+        uniqueMap.set(nodeInfo.currentNodeHash, nodeInfo);
+      }
+    }
+
+    return Array.from(uniqueMap.values());
+  }
 });
