@@ -1,3 +1,37 @@
+# How multiproof works
+
+This function retrieves multi-proofs for a set of commitment pairs using a smart contract.
+
+### Inputs
+- **contract**: Instance of the `Depositor` contract.
+- **pairs**: Array of `CommitmentFields`.
+
+### Outputs
+An object containing:
+- **pairs**: Original input pairs.
+- **siblings**: Array of sibling hashes.
+- **root**: Root hash of the Merkle tree.
+
+### Process Overview
+1. **Generate Node Info**:
+    - For each pair form input pairs, compute `value`, `key`, and retrieve proof from contract
+    - Find `siblingIndex` - the deepest non-zero position from the siblings
+    - Store `currentNodeHash`, `currentNodeKey`, `siblings`, and `siblingIndex` as new struct
+
+2. **Process Nodes Info**
+    - Find the maximum `siblingIndex` in `nodeInfos`
+    - Initialize two empty lists: `A` and `B`
+    - For each node in `nodeInfos` where `siblingIndex` equals the maximum:
+        - Find immediate neighbor and create pair [L, R]
+        - Store currentNodeHash in A[] and pair in B[][]
+        - Update currentNodeHash from pair
+        - siblingIndex--
+    - For each unique item in `B` that is not in `A`, add it to list `M`
+    - Update `nodeInfos` to remove duplicates
+    - Clear lists `A` and `B`
+
+3. **Return the original pairs, collected siblings, and the root hash**
+
 # Hardhat template 
 
 Template hardhat repository for ad-hoc smart contracts development.
