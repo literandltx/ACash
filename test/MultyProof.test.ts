@@ -621,20 +621,11 @@ describe.only("MultiProof", () => {
       });
     }
 
-    // console.log("Siblings:");
-    // nodeInfos.forEach(node => {
-    //   console.log(node.siblings.map(item => BigInt(item)));
-    // })
-
-    // console.log("To iterate: ");
     while (nodeInfos.length !== 0 && nodeInfos[0].siblingIndex !== -1) {
       const maxIndex = Math.max(...nodeInfos.map(node => node.siblingIndex));
       const B: bigint[][] = [];
       const A: bigint[] = [];
 
-      // console.log(`\nIteration: ${nodeInfos.find(node => node.siblingIndex === maxIndex)?.siblingIndex}`);
-      // console.log(`Nodes len: ${nodeInfos.length}`);
-      // console.log(`Filtered nodes len: ${nodeInfos.filter(node => node.siblingIndex === maxIndex).length}`);
       nodeInfos
         .filter(node => node.siblingIndex === maxIndex)
         .forEach(node => {
@@ -655,8 +646,6 @@ describe.only("MultiProof", () => {
 
       nodeInfos = nodeInfos.filter(node => !node.toRemove);
       nodeInfos = distinctNodeInfos(nodeInfos);
-
-      // console.log(`B.len: ${B.length}`);
 
       A.length = 0;
       B.length = 0;
