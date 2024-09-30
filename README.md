@@ -1,6 +1,17 @@
 # How multiproof works
 
 This function retrieves multi-proofs for a set of commitment pairs using a smart contract.
+This repository implements an off-chain solution for retrieving multi-proofs using Sparse Merkle Trees (SMTs). 
+It allows efficient batch querying of multiple commitment pairs, that may significantly reducing computation costs and 
+improving performance compared to on-chain methods.
+
+### Key Features
+- **Scalability**: Supports any number of input leafs to generate multi proof.
+- **Efficiency**: Generates multi-proofs off-chain, might minimize gas fees and execution time of ZKP.
+
+### References
+- [Compact merkle multiproof](https://arxiv.org/pdf/2002.07648)
+- Code implementation [here](test/helpers/smt-multoproof-helper.ts)
 
 ### Inputs
 - **contract**: Instance of the `Depositor` contract.
