@@ -15,7 +15,7 @@ import { expect } from "chai";
 const treeHeight = 32; // default
 const eth_value = "1"
 
-describe.only("MultiProof", () => {
+describe("MultiProof", () => {
   const reverter = new Reverter();
 
   let OWNER: SignerWithAddress;
@@ -587,7 +587,6 @@ describe.only("MultiProof", () => {
     expect(smtMultiProof.pairs).to.deep.be.equal(chosenPairs);
     expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
   });
-
 
   async function proceedCertainDeposit(pair: CommitmentFields): Promise<void> {
     await depositor.deposit(getCommitment(pair) as any, { value: ethers.parseEther(eth_value) } as any);
