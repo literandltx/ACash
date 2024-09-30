@@ -43,6 +43,23 @@ An object containing:
 
 3. **Return the original pairs, collected siblings, and the root hash**
 
+## MultiProof Metrics
+
+This section provides an overview of the performance metrics collected during the MultiProof metrics test. Merkle tree param
+
+### Metrics Tests Summary
+
+- **Metrics tests M in N**: Generate multiproof for M inputs from tree with N leafs.
+
+| Test Configuration | Average Generation Time (sec) | Average Siblings Length |
+|--------------------|-------------------------------|-------------------------|
+| 5 in 200           | 0.0561                        | 25.80                   |
+| 5 in 500           | 0.0620                        | 32.40                   |
+| 5 in 1000          | 1.4757                        | 37.36                   |
+| 10 in 200          | 0.0668                        | 39.91                   |
+| 10 in 500          | 0.1332                        | 53.49                   |
+| 10 in 1000         | 1.7310                        | 62.42                   |
+
 # Hardhat template 
 
 Template hardhat repository for ad-hoc smart contracts development.
