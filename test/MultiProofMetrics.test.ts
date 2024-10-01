@@ -15,7 +15,7 @@ import { expect } from "chai";
 const treeHeight = 32; // default
 const eth_value = "1"
 
-describe.only("MultiProof metrics", async () => {
+describe("MultiProof metrics", async () => {
   const reverter = new Reverter();
 
   let OWNER: SignerWithAddress;
@@ -47,7 +47,7 @@ describe.only("MultiProof metrics", async () => {
   function metricsTest(pairNumberToGen, pairNumberToProof, numberOfProofsToGen) {
     describe(`Metrics tests ${pairNumberToProof} in ${pairNumberToGen}`, () => {
 
-      it("should generate and validate metrics", async () => {
+      it("should generate and validate performance metrics", async () => {
         const pairs: CommitmentFields[] = Array.from({ length: pairNumberToGen }, () => generateSecrets());
         await Promise.all(pairs.map(pair => proceedCertainDeposit(pair)));
 
@@ -60,7 +60,6 @@ describe.only("MultiProof metrics", async () => {
           expect(smtmp.root).to.be.equal(await depositor.getRoot());
 
           totalSiblingsLength += smtmp.siblings.length;
-          // console.log(`siblings len: ${smtmp.siblings.length}`);
         });
         await Promise.all(metricsPromises);
 
