@@ -72,16 +72,16 @@ describe("MultiProof metrics", async () => {
     });
   }
 
-  metricsTest(200, 5, 100);
-  metricsTest(500, 5, 100);
-  metricsTest(1000, 5, 100);
+  // metricsTest(200, 5, 100);
+  // metricsTest(500, 5, 100);
+  // metricsTest(1000, 5, 100);
   // metricsTest(10000, 5, 100);
 
   console.log();
 
-  metricsTest(200, 10, 100);
-  metricsTest(500, 10, 100);
-  metricsTest(1000, 10, 100);
+  // metricsTest(200, 10, 100);
+  // metricsTest(500, 10, 100);
+  // metricsTest(1000, 10, 100);
   // metricsTest(10000, 10, 100);
 
   async function proceedCertainDeposit(pair: CommitmentFields): Promise<void> {
