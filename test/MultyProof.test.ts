@@ -537,7 +537,7 @@ describe("MultiProof", () => {
     });
   })
 
-  it.skip("should test for gen test cases", async () => {
+  it.skip("should test demo", async () => {
     const pairs: CommitmentFields[] =
       [
         {
@@ -559,10 +559,7 @@ describe("MultiProof", () => {
     // console.log(pairs);
 
     // const smtMultiProof = await getMultiProof(depositor, [pairs[0]]);
-    // const smtMultiProof = await getMultiProof(depositor, [pairs[1]]);
-    // const smtMultiProof = await getMultiProof(depositor, [pairs[2]]);
     // const smtMultiProof = await getMultiProof(depositor, [pairs[0], pairs[1]]);
-    // const smtMultiProof = await getMultiProof(depositor, [pairs[1], pairs[2]]);
     const smtMultiProof = await getMultiProof(depositor, pairs);
 
     const actualRoot = BigInt(await depositor.getRoot());
@@ -572,20 +569,6 @@ describe("MultiProof", () => {
     console.log(smtMultiProof.root === actualRoot);
     console.log(smtMultiProof.siblings.length + " proof len");
     console.log(smtMultiProof.siblings);
-  });
-
-  it.skip("should gen proof for 5 random leaf from 100", async () => {
-    const pairNumberToGen = 100;
-    const pairNumberToProof = 5;
-    const pairs: CommitmentFields[] = Array.from({ length: pairNumberToGen }, () => generateSecrets());
-
-    await Promise.all(pairs.map(pair => proceedCertainDeposit(pair)));
-    const chosenPairs = pickRandomElements(pairs, pairNumberToProof);
-
-    const smtMultiProof = await getMultiProof(depositor, chosenPairs);
-
-    expect(smtMultiProof.pairs).to.deep.be.equal(chosenPairs);
-    expect(smtMultiProof.root).to.be.equal(await depositor.getRoot());
   });
 
   async function proceedCertainDeposit(pair: CommitmentFields): Promise<void> {
