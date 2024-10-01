@@ -1,5 +1,29 @@
-# How multiproof works
+# Repository description
+This implementation serves as a proof of concept (PoC) project to explore and understand how zero-knowledge proofs (ZKP) function in practice, specifically with Sparse Merkle Trees. It also aims to implement multi-proofs using Sparse Merkle Trees.
 
+### System Functionality Overview
+
+This smart contract supports a variety of financial operations:
+
+- **Deposit**: Users can deposit a specified amount (equal to a defined tier). Each deposit is linked to a unique commitment, ensuring no duplicates.
+
+- **Withdraw**: Users can withdraw funds by providing a valid nullifier hash, recipient address, and appropriate proof without revealing any additional info. The system verifies it.
+
+- **Transfer**: Users can transfer funds to new "owner" using a nullifier hash and a new commitment. This function also checks for existing commitments and valid roots to ensure secure transfers.
+
+- **Simple Batch Transfers**: Users can transfer many funds as one function. But main the idea of this function is to understand concept of butch of payments and compare to other implementations.
+
+### Limitation (todo)
+
+### Problem
+Imagine a situation where Alice wants to transfer 5 ETH to Bob anonymously, but system support only 1 ETH tier transfer, in that case how Alice can do it. The obvious way is transfer 5 times in row, but in that case it seems ineffective.
+
+### Solution
+One of the possible approach to solve this problem is support Sparse Merkle Tree (SMT) inclusion multiproof to improve time and/or memory proof generation complexity.
+
+### What is done yet (todo)
+
+# How multiproof works
 This function retrieves multi-proofs for a set of commitment pairs using a smart contract.
 This repository implements an off-chain solution for retrieving multi-proofs using Sparse Merkle Trees (SMTs). 
 It allows efficient batch querying of multiple commitment pairs, that may significantly reducing computation costs and 
