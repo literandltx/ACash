@@ -13,7 +13,10 @@ This smart contract supports a variety of financial operations:
 
 - **Simple Batch Transfers**: Users can transfer many funds as one function. But main the idea of this function is to understand concept of butch of payments and compare to other implementations.
 
-### Limitation (todo)
+### Limitation
+
+All functions works and support only predefined tier to work. Also, can work only with one entity for one iteration. Merkle tree height must be predefined and cannot be changed later. Still exists problem with commitment (key) exchanging in withdraw and transfer functions.
+Support only predefined amount of tiers.
 
 ### Problem
 Imagine a situation where Alice wants to transfer 5 ETH to Bob anonymously, but system support only 1 ETH tier transfer, in that case how Alice can do it. The obvious way is transfer 5 times in row, but in that case it seems ineffective.
@@ -21,7 +24,9 @@ Imagine a situation where Alice wants to transfer 5 ETH to Bob anonymously, but 
 ### Solution
 One of the possible approach to solve this problem is support Sparse Merkle Tree (SMT) inclusion multiproof to improve time and/or memory proof generation complexity.
 
-### What is done yet (todo)
+### What is done yet
+Implemented slighted modification [Compact Merkle Tree MultiProof](https://arxiv.org/pdf/2002.07648) for SMP.
+The effectiveness of proof generation is investigated and the efficiency metrics were measured.
 
 # How multiproof works
 This function retrieves multi-proofs for a set of commitment pairs using a smart contract.
@@ -34,8 +39,7 @@ improving performance compared to on-chain methods.
 - **Efficiency**: Generates multi-proofs off-chain, might minimize gas fees and execution time of ZKP.
 
 ### References
-- [Compact merkle multiproof](https://arxiv.org/pdf/2002.07648)
-- Code implementation [here](test/helpers/smt-multoproof-helper.ts)
+- Multiproof generation implementation [here](test/helpers/smt-multoproof-helper.ts)
 
 ### Inputs
 - **contract**: Instance of the `Depositor` contract.
@@ -83,3 +87,6 @@ This section provides an overview of the performance metrics collected during th
 | 10 in 200          | 0.0668                        | 39.91                   |
 | 10 in 500          | 0.1332                        | 53.49                   |
 | 10 in 1000         | 1.7310                        | 62.42                   |
+
+### What to do next
+Implement full verification for generated multiproof in TS (off-chain to proof correctness itself) and/or in Circom for full usage in ZKP env, like butch of payments.
